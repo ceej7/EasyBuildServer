@@ -21,34 +21,10 @@ public class Controller1 {
     @RequestMapping(value = "/hello", method = RequestMethod.GET)
     @ResponseBody
     public JsonMsg hello(){
+
         JsonMsg jsonMsg=new JsonMsg();
-        jsonMsg.setCode("205");
-        jsonMsg.setData(0);
-        return jsonMsg;
-    }
-    @RequestMapping(value = "/hello1", method = RequestMethod.GET)
-    @ResponseBody
-    public JsonMsg hello1(int i){
-        MongoClient client= RemoteMDBUtil.createMongoDBClient();
-        try {
-            // 取得Collecton句柄
-            MongoDatabase database = client.getDatabase(RemoteMDBUtil.DEMO_DB);
-            MongoCollection<Document> collection = database.getCollection(RemoteMDBUtil.DEMO_COLL);
-            // 读取数据
-            MongoCursor<Document> cursor = collection.find().iterator();
-            while (cursor.hasNext()) {
-                JsonMsg jsonMsg=new JsonMsg();
-                jsonMsg.setCode("205");
-                jsonMsg.setData(cursor.next());
-                return jsonMsg;
-            }
-        } finally {
-            //关闭Client，释放资源
-            client.close();
-        }
-        JsonMsg jsonMsg=new JsonMsg();
-        jsonMsg.setCode("205");
-        jsonMsg.setData(0);
+        jsonMsg.setCode("886");
+        jsonMsg.setData("顾卓成也太帅了吧,我敲立马)");
         return jsonMsg;
     }
 }
