@@ -23,7 +23,7 @@ public class ControllerDemo {
     public JsonMsg hello(){
         JsonMsg jsonMsg=new JsonMsg();
         jsonMsg.setCode("200");
-        jsonMsg.setData("这个是我的测试，data是一个object");
+        jsonMsg.setData("这个测试，data是一个object");
         return jsonMsg;
     }
 }
