@@ -15,16 +15,15 @@ import java.util.ArrayList;
 
 
 @Controller
-@RequestMapping(value = "/home")
-public class Controller1 {
+@RequestMapping(value = "/mytest")
+public class ControllerDemo {
 
-    @RequestMapping(value = "/hello", method = RequestMethod.GET)
+    @RequestMapping(value = "/test1")
     @ResponseBody
     public JsonMsg hello(){
-
         JsonMsg jsonMsg=new JsonMsg();
-        jsonMsg.setCode("886");
-        jsonMsg.setData("顾卓成也太帅了吧,我敲立马)");
+        jsonMsg.setCode("200");
+        jsonMsg.setData("这个是我的测试，data是一个object");
         return jsonMsg;
     }
 }
