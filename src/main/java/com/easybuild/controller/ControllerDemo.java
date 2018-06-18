@@ -18,11 +18,15 @@ import java.util.ArrayList;
 @RequestMapping(value = "/mytest")
 public class ControllerDemo {
 
+    /**
+     * 测试用方法
+     * @return
+     */
     @RequestMapping(value = "/test1")
     @ResponseBody
     public JsonMsg hello(){
         JsonMsg jsonMsg=new JsonMsg();
-        jsonMsg.setCode("200");
+        jsonMsg.setCode("209");
         jsonMsg.setData("这个测试，data是一个object");
         return jsonMsg;
     }
