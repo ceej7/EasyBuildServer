@@ -118,6 +118,7 @@ public class SearchController {
      */
     public JsonMsg queryItems(JSONObject object)
     {
+        Long d0=new Date().getTime();
         //1.include="0000000000"
         //2. key
         //3.low high
@@ -196,31 +197,32 @@ public class SearchController {
         for (int i = 0; i < keys_raw.size(); i++) {
             keys.add(  StringUtils.replace(keys_raw.get(i)," ","").toLowerCase()  );//小写&去空格
         }
-
+        BasicDBObject proj=new BasicDBObject();
+        proj.put("title",1);
+        proj.put("img",1);
+        proj.put("prices",1);
+        proj.put("itemID",1);
+        proj.put("comments",1);
         //根据key和price筛选
-        MongoCursor<Document> dbCursor = collection.find(queryCondition).iterator();
+        BasicDBList values_and=new BasicDBList();
+        int i=0;
+        for (; i < keys.size(); i++) {
+            BasicDBObject _cond1=new BasicDBObject();
+            BasicDBObject _cond2=new BasicDBObject();
+            _cond2.put("$regex",keys.get(i));
+            _cond2.put("$options","i");
+            _cond1.put("title",_cond2);
+            values_and.add(_cond1);
+        }
+        if(keys.size()!=0)
+        {
+            queryCondition.put("$and",values_and);
+        }
+        MongoCursor<Document> dbCursor = collection.find(queryCondition).projection(proj).iterator();
         while(dbCursor.hasNext())
         {
             JSONObject item=JSONObject.fromObject(dbCursor.next().toJson());
-            boolean hasKey=false;
-            if(keys.size()==0)
-            {
-                hasKey=true;
-            }
-            else{
-                int i=0;
-                for (; i < keys.size(); i++) {
-                    if(!item.toString().toLowerCase().contains(keys.get(i)))
-                    {
-                        break;
-                    }
-                }
-                if(i==keys.size())
-                {
-                    hasKey=true;
-                }
-            }
-
+            boolean hasKey=true;
             if(hasKey)
             {
                 Iterator<String > tmpkeys=item.getJSONObject("prices").keys();
@@ -238,7 +240,7 @@ public class SearchController {
                 }
             }
         }
-
+        Long d1=new Date().getTime();
         //排序
         String seq=object.getString("order");
         if(seq.equals("comprehensive"))
@@ -257,6 +259,7 @@ public class SearchController {
         {
             Collections.sort(result, new SortByPriceAsc());
         }
+        Long d2=new Date().getTime();
         jsonMsg.setCode("true");
         jsonMsg.setData(JSONArray.fromObject(result));
         return jsonMsg;

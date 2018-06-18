@@ -2,6 +2,8 @@ package model;
 
 import org.apache.commons.lang.StringUtils;
 
+import java.util.Date;
+
 /**
  * code-data的返回格式
  * code进行错误判断
@@ -30,7 +32,7 @@ public class JsonMsg {
     public static void main(String[] args) {
         String[] ss= StringUtils.split("  "," ");
 
-        System.out.println(" ");
+        System.out.println(new Date().toString());
         System.out.println(" ");
     }
 }
