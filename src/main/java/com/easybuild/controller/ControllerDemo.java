@@ -26,7 +26,7 @@ public class ControllerDemo {
     @ResponseBody
     public JsonMsg hello(){
         JsonMsg jsonMsg=new JsonMsg();
-        jsonMsg.setCode("229");
+        jsonMsg.setCode("249");
         jsonMsg.setData("这个测试，data是一个object");
         return jsonMsg;
     }
