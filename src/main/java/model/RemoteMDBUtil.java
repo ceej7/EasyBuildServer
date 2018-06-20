@@ -23,7 +23,7 @@ public class RemoteMDBUtil {
     //数据库内网连接
     public static ServerAddress seed1 = new ServerAddress("dds-bp1375253460cc8433270.mongodb.rds.aliyuncs.com", 3717);
     //数据库外网连接
-//    public static ServerAddress seed1 = new ServerAddress("dds-bp1375253460cc84-pub.mongodb.rds.aliyuncs.com", 3717);
+    //    public static ServerAddress seed1 = new ServerAddress("dds-bp1375253460cc84-pub.mongodb.rds.aliyuncs.com", 3717);
     public static String username = "root";
     public static String password = "Aa123456";
     public static String DEFAULT_DB = "admin";

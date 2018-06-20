@@ -25,11 +25,12 @@ import java.util.*;
 @RequestMapping(value = "/search")
 public class SearchController {
     MongoClient client=RemoteMDBUtil.createMongoDBClient();
+    //分页条目
     static int limit=100;
+
     /**
      * 统一化的search解析一底层
      * 解析type，进行服务映射
-     *
      * @param json
      * @return
      */
@@ -63,7 +64,6 @@ public class SearchController {
 
     /**
      * 根据数据库id来搜索item
-     *
      * @param json
      * @return
      */
@@ -91,6 +91,44 @@ public class SearchController {
         if (dbCursor.hasNext()) {//遍历查询子结构
             JSONObject item = JSONObject.fromObject(dbCursor.next().toJson());
             if (type.equals("items")) {
+                //添加冗余string123
+                Iterator<String>  its=item.keys();
+                while (its.hasNext())
+                {
+                    String tmp=its.next();
+                    if(!tmp.equals("_id")&&!tmp.equals("title")&&!tmp.equals("img")&&!tmp.equals("prices")&&!tmp.equals("comments")&&!tmp.equals("itemID"))
+                    {
+                        JSONObject _item=item.getJSONObject(tmp);
+                        if(_item.has("主体"))
+                        {
+                            JSONObject body=_item.getJSONObject("主体");
+                            Iterator<String> ite=body.keys();
+                            int cnt=1;
+                            while(ite.hasNext())
+                            {
+                                String _tmp=ite.next();
+                                if(!_tmp.equals("其他"))
+                                {
+                                    _item.put("string"+cnt,body.getString(_tmp));
+                                    cnt++;
+                                }
+                            }
+                            for (; cnt <=3 ; cnt++)
+                            {
+                                _item.put("string"+cnt,"未知");
+                            }
+                        }
+                        else{
+                            int cnt=1;
+                            for (; cnt <=3 ; cnt++)
+                            {
+                                _item.put("string"+cnt,"未知");
+                            }
+                        }
+                        item.put(tmp,_item);
+                    }
+                }
+                //维护price
                 Iterator<String> tmpkeys = item.getJSONObject("prices").keys();
                 String pricekey = "";
                 while (tmpkeys.hasNext()) {
@@ -99,6 +137,7 @@ public class SearchController {
                 Double price = item.getJSONObject("prices").getDouble(pricekey);
                 item.put("price", price);
                 item.put("prices", " " + item.getJSONObject("prices").toString());
+                //维护图片
                 String img = item.getString("img");
                 item.put("img", "http:" + img);
             }
@@ -147,7 +186,6 @@ public class SearchController {
 
     /**
      * 根据itemID来搜索item
-     *
      * @param json
      * @return
      */
@@ -175,6 +213,9 @@ public class SearchController {
         if (dbCursor.hasNext()) {//遍历查询子结构
             JSONObject item = JSONObject.fromObject(dbCursor.next().toJson());
             if (type.equals("items")) {
+
+
+                //维护price
                 Iterator<String> tmpkeys = item.getJSONObject("prices").keys();
                 String pricekey = "";
                 while (tmpkeys.hasNext()) {
@@ -185,6 +226,9 @@ public class SearchController {
                 item.put("prices", " " + item.getJSONObject("prices").toString());
                 String img = item.getString("img");
                 item.put("img", "http:" + img);
+
+
+
             }
             jsonMsg.setCode(type);
             jsonMsg.setData(item);
@@ -196,7 +240,6 @@ public class SearchController {
 
     /**
      * 根据Json中参数查找商品
-     *
      * @param object
      * @return
      */
@@ -328,7 +371,6 @@ public class SearchController {
     /**
      * 查询CPU数据
      * 注意属性的大小写
-     *
      * @param object
      * @return
      */
@@ -385,7 +427,6 @@ public class SearchController {
 
     /**
      * 查询GPU数据
-     *
      * @param object
      * @return
      */
@@ -439,7 +480,6 @@ public class SearchController {
 
     /**
      * 查询剩下半同构化的数据
-     *
      * @param object
      * @return
      */
@@ -521,20 +561,11 @@ public class SearchController {
 
     public void queryKeyInt(JSONObject object, String name, BasicDBObject values) {
         BasicDBObject query1 = new BasicDBObject();
-//        if(object.getJSONObject(name).has("low"))
-//        {
-//            query1.put("$gte",object.getJSONObject(name).getInt("low"));
-//        }
-//        if(object.getJSONObject(name).has("high"))
-//        {
-//            query1.put("$lte",object.getJSONObject(name).getInt("high"));
-//        }
         values.put(name, object.getInt(name));
     }
 
     /**
      * 根据itemID查找图片
-     *
      * @param itemID
      * @return
      */
@@ -557,7 +588,6 @@ public class SearchController {
 
     /**
      * 嵌套查询内部
-     *
      * @param json
      * @return
      */
@@ -577,7 +607,6 @@ public class SearchController {
      * sort内部类接口方法
      */
     class SortByCom implements Comparator {
-
         public int compare(Object o1, Object o2) {
             JSONObject j1 = (JSONObject) o1;
             JSONObject j2 = (JSONObject) o2;

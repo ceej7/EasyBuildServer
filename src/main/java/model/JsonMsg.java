@@ -29,10 +29,4 @@ public class JsonMsg {
         this.data = data;
     }
 
-    public static void main(String[] args) {
-        String[] ss= StringUtils.split("  "," ");
-
-        System.out.println(new Date().toString());
-        System.out.println(" ");
-    }
 }
